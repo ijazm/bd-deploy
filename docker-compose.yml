@@ -1,0 +1,35 @@
+version: "3.0"
+
+services:
+
+  mongo:
+    image: mongo:latest
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    - MONGO_LOG_DIR=/dev/stdout
+    volumes:
+    - mongo_data:/data/db
+    command: mongod --smallfiles --logpath=/dev/stdout
+
+  api:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmarketplace:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/marketplace
+    depends_on: 
+    - mongo
+
+  ui:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervplatformv5api:ci_latest
+    depends_on: 
+    - api
+
+  proxy:
+    build: proxy
+    ports:
+    - "80:80" 
+    depends_on: 
+    - ui
+
+
+volumes:
+  mongo_data:
