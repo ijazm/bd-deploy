@@ -15,7 +15,89 @@ services:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmarketplace:ci_latest
     environment:
     - MONGO_URL=mongodb://mongo:27017/marketplace
+    - CR_API_MARKET_PORT=$CR_API_MARKET_PORT
+    - CR_APP_URL=$CR_APP_URL
+    - CR_API_MAILER_PORT=$CR_API_MAILER_PORT
+    - CR_API_NOTIFY_PORT=$CR_API_NOTIFY_PORT
+    - CR_APP_ZERV_PORT=$CR_APP_ZERV_PORT
+    - CR_API_ONBOARD_PORT=$CR_API_ONBOARD_PORT
+    - CR_API_AUTH_PORT=$CR_API_AUTH_PORT
+    - CR_API_MATCH_PORT=$CR_API_MATCH_PORT
+    ports:
+    - $CR_API_MARKET_PORT:$CR_API_MARKET_PORT
     depends_on: 
+    - mongo
+  
+  authenticationApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervauthentication:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/DATA
+    - CR_API_AUTH_PORT=$CR_API_AUTH_PORT
+    - CR_APP_ZERV_PORT=$CR_APP_ZERV_PORT
+    - CR_API_MAILER_URL=$CR_API_MAILER_URL
+    ports:
+    - $CR_API_AUTH_PORT:$CR_API_AUTH_PORT
+    depends_on:
+    - mongo
+
+  mailerApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmailer:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/crgeneric
+    - CR_API_MAILER_PORT=$CR_API_MAILER_PORT
+    ports:
+    - $CR_API_MAILER_PORT:$CR_API_MAILER_PORT
+    depends_on:
+    - mongo
+
+  reviewApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervreview:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/review
+    - CR_API_REVIEW_PORT=$CR_API_REVIEW_PORT
+    ports:
+    - $CR_API_REVIEW_PORT:$CR_API_REVIEW_PORT
+    depends_on:
+    - mongo
+
+  trackandtraceApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervtrackandtrace:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/trackData
+    - CR_API_TRACK_PORT=$CR_API_TRACK_PORT
+    ports:
+    - $CR_API_TRACK_PORT:$CR_API_TRACK_PORT
+    depends_on:
+    - mongo
+
+  notificationApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervnotification:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/notificationData
+    - CR_API_NOTIFY_PORT=$CR_API_NOTIFY_PORT
+    ports:
+    - $CR_API_NOTIFY_PORT:$CR_API_NOTIFY_PORT
+    depends_on:
+    - mongo
+
+  matchmakingApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmatchmaking:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/matchData
+    - CR_API_MATCH_PORT=$CR_API_MATCH_PORT
+    ports:
+    - $CR_API_MATCH_PORT:$CR_API_MATCH_PORT
+    depends_on:
+    - mongo
+
+  chatservicesApi:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervchatservices:ci_latest
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/chatData
+    - CR_API_CHAT_PORT=$CR_API_CHAT_PORT
+    ports:
+    - $CR_API_CHAT_PORT:$CR_API_CHAT_PORT
+    depends_on:
     - mongo
 
   ui:
