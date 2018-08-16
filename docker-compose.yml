@@ -11,115 +11,99 @@ services:
     - mongo_data:/data/db
     command: mongod --smallfiles --logpath=/dev/stdout
 
-  api:
+  marketplace:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmarketplace:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/marketplace
-    - CR_API_MARKET_PORT=$CR_API_MARKET_PORT
-    - CR_APP_URL=$CR_APP_URL
-    - CR_API_MAILER_URL=$CR_API_MAILER_URL
-    - CR_API_NOTIFY_URL=$CR_API_NOTIFY_URL
-    - CR_APP_ZERV_URL=$CR_APP_ZERV_URL
-    - CR_API_ONBOARD_URL=$CR_API_ONBOARD_URL
-    - CR_API_AUTH_URL=$CR_API_AUTH_URL
-    - CR_API_MATCH_URL=$CR_API_MATCH_URL
-    ports:
-    - $CR_API_MARKET_PORT:3000
     depends_on: 
     - mongo
+    
+  onboarding:
+    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervonboarding:ci_latest
+    env_file:
+    - envfile.env
+    environment:
+    - MONGO_URL=mongodb://mongo:27017/CRDB02
+    depends_on:
+    - mongo
   
-  authenticationApi:
+  authentication:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervauthentication:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/DATA
-    - CR_API_URL=$CR_API_URL
-    - CR_API_MARKET_URL=$CR_API_MARKET_URL
-    - CR_API_AUTH_PORT=$CR_API_AUTH_PORT
-    - CR_APP_ZERV_URL=$CR_APP_ZERV_URL
-    - CR_API_MAILER_URL=$CR_API_MAILER_URL
-    - CR_APP_ONBOARD_URL=$CR_APP_ONBOARD_URL
-    ports:
-    - $CR_API_AUTH_PORT:3000
     depends_on:
     - mongo
 
-  mailerApi:
+  mailer:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmailer:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/crgeneric
-    - CR_API_URL=$CR_API_URL
-    - CR_API_MAILER_PORT=$CR_API_MAILER_PORT
-    - CR_API_MAILER_URL=$CR_API_MAILER_URL
-    ports:
-    - $CR_API_MAILER_PORT:3000
     depends_on:
     - mongo
 
-  reviewApi:
+  review:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervreview:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/review
-    - CR_API_REVIEW_PORT=$CR_API_REVIEW_PORT
-    - CR_API_URL=$CR_API_URL
-    - CR_API_REVIEW_URL=$CR_API_REVIEW_URL
-    ports:
-    - $CR_API_REVIEW_PORT:3000
     depends_on:
     - mongo
 
-  trackandtraceApi:
+  trackandtrace:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervtrackandtrace:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/trackData
-    - CR_API_TRACK_PORT=$CR_API_TRACK_PORT
-    - CR_API_URL=$CR_API_URL
-    - CR_API_TRACK_URL=$CR_API_TRACK_URL
-    ports:
-    - $CR_API_TRACK_PORT:3000
     depends_on:
     - mongo
 
-  notificationApi:
+  notification:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervnotification:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/notificationDb1
-    - CR_API_NOTIFY_PORT=$CR_API_NOTIFY_PORT
-    - CR_API_URL=$CR_API_URL
-    - CR_API_NOTIFY_URL=$CR_API_NOTIFY_URL
-    ports:
-    - $CR_API_NOTIFY_PORT:3000
     depends_on:
     - mongo
 
-  matchmakingApi:
+  matchmaking:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmatchmaking:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/matchData1
-    - CR_API_MATCH_PORT=$CR_API_MATCH_PORT
-    - CR_API_URL=$CR_API_URL
-    - CR_API_MATCH_URL=$CR_API_MATCH_URL
-    ports:
-    - $CR_API_MATCH_PORT:3000
     depends_on:
     - mongo
 
-  chatservicesApi:
+  chatservices:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervchatservices:ci_latest
+    env_file:
+    - envfile.env
     environment:
     - MONGO_URL=mongodb://mongo:27017/chatData
-    - CR_API_CHAT_PORT=$CR_API_CHAT_PORT
-    - CR_API_URL=$CR_API_URL
-    - CR_API_NOTIFY_URL=$CR_API_NOTIFY_URL
-    - CR_API_CHAT_URL=$CR_API_CHAT_URL
-    ports:
-    - $CR_API_CHAT_PORT:3000
     depends_on:
     - mongo
 
   ui:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervplatformv5api:ci_latest
     depends_on: 
-    - api
+    - marketplace
+    - onboarding
+    - authentication
+    - mailer
+    - review
+    - trackandtrace
+    - notification
+    - matchmaking
+    - chatservices
 
   proxy:
     build: proxy
@@ -130,4 +114,4 @@ services:
 
 
 volumes:
-  mongo_data:
+     mongo_data:
