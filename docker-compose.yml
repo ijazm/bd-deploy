@@ -2,101 +2,66 @@ version: "3.0"
 
 services:
 
-  mongo:
-    image: mongo:latest
-    environment:
-    - MONGO_DATA_DIR=/data/db
-    - MONGO_LOG_DIR=/dev/stdout
-    volumes:
-    - mongo_data:/data/db
-    command: mongod --smallfiles --logpath=/dev/stdout
-
   marketplace:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmarketplace:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/marketplace
-    depends_on: 
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/marketplace
     
-  onboarding:
-    image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervonboarding:ci_latest
-    env_file:
-    - envfile.env
-    environment:
-    - MONGO_URL=mongodb://mongo:27017/CRDB02
-    depends_on:
-    - mongo
-  
   authentication:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervauthentication:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/DATA
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/DATA
 
   mailer:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmailer:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/crgeneric
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/crgeneric
 
   review:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervreview:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/review
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/review
 
   trackandtrace:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervtrackandtrace:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/trackData
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/trackData
 
   notification:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervnotification:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/notificationDb1
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/notificationDb
 
   matchmaking:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervmatchmaking:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/matchData1
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/matchData
 
   chatservices:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervchatservices:ci_latest
     env_file:
     - envfile.env
     environment:
-    - MONGO_URL=mongodb://mongo:27017/chatData
-    depends_on:
-    - mongo
+    - MONGO_URL=mongodb+srv://suku:mqMGttyFShizYkOnbFLXjo@sukusharedmongodb-miu9y.mongodb.net/test?retryWrites=true/chatData
 
   ui:
     image: 045498435234.dkr.ecr.us-west-2.amazonaws.com/zervplatformv5api:ci_latest
     depends_on: 
     - marketplace
-    - onboarding
     - authentication
     - mailer
     - review
