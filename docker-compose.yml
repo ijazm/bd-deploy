@@ -76,7 +76,3 @@ services:
     - "80:80" 
     depends_on: 
     - ui
-
-
-volumes:
-     mongo_data:
